@@ -24,7 +24,7 @@ def get_issuers():
 def get_last_date(issuer_code):
     # Check the last date of available data
     try:
-        df = pd.read_csv(f"{issuer_code}.csv")
+        df = pd.read_csv(f"data/{issuer_code}.csv")  #now this line checks if the file is present in data/
         if df.empty:
             return None
         last_date = pd.to_datetime(df.tail(1)['Date']).iloc[0]
