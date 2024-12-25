@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Market Predictor</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Sidebar styles */
+        .sidebar {
+            position: fixed; /* Fixes the sidebar in place */
+            top: 0; /* Aligns it to the top of the page */
+            left: 0; /* Aligns it to the left of the page */
+            width: 200px; /* Sidebar width */
+            height: 100vh; /* Full height of the viewport */
+            background-color: #004d40; /* Your sidebar color */
+            color: white;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 1000; /* Ensures it appears above other content */
+        }
+
+        .sidebar h1 {
+            font-family: 'Lusitana', sans-serif;
+            font-size: 36px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Search bar */
+        .sidebar input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 30px;
+        }
+
+        /* Footer links */
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: auto; /* Pushes links to the bottom */
+        }
+
+        .sidebar ul li {
+            margin: 10px 0;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            text-decoration: none;
+            position: relative; /* To position the pseudo-elements */
+        }
+
+        /* Add dots before the links */
+        .sidebar ul li a::before {
+            content: '•'; /* Dot before the link */
+            font-size: 24px;
+            margin-right: 10px; /* Space between the dot and the link text */
+            position: absolute;
+            left: -20px; /* Adjust the position of the dot */
+        }
+
+        /* Add arrows after the links */
+        .sidebar ul li a::after {
+            content: '→'; /* Arrow after the link */
+            font-size: 20px;
+            margin-left: 10px; /* Space between the link text and the arrow */
+            position: absolute;
+            right: -20px; /* Adjust the position of the arrow */
+        }
+
+        /* Main content */
+        .main-content {
+            margin-left: 200px;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .main-content h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: #f2f2f2; /* Light gray background */
+            margin-bottom: 20px;
+            border: none; /* Removes card borders */
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .card-text {
+            font-size: 18px;
+        }
+
+        .btn {
+            /* Button styling */
+            border-radius: 20px;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: flex; /* Flexbox for centering content */
+            align-items: center;
+            justify-content: space-between; /* Arrow at the end */
+            width: 100%; /* Make the button span the full width */
+        }
+
+        .btn span {
+            /* Text styling */
+            margin-right: auto; /* Push text to the center */
+            margin-top: -300px;
+            font-size: 18px;
+        }
+
+        .btn::after {
+            content: '→'; /* Adds the right arrow */
+            font-size: 50px;
+            color: black; /* Black arrow */
+            margin-left: 10px; /* Space between text and arrow */
+            margin-top: -180px;
+        }
+
+        /* Image Background */
+        .background-image {
+            position: absolute;
+            width: 611.81px;
+            height: 355.92px;
+            left: -115.67px;
+            top: 520.77px;
+            background: url('image.png');
+            opacity: 0.3;
+            border-radius: 3px;
+            transform: rotate(-12.06deg);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h1>Stock Market Predictor</h1>
+        <form th:method="GET" th:action="@{/issuer/rezultati-prebaruvanje}">
+            <label for="search">Search Events:</label>
+            <input type="text" class="form-control" id="search" name="searchName" placeholder="Search">
+            <button type="submit">Search</button>
+        </form>
+        <ul>
+            <li><a href="#">За нас</a></li>
+            <li><a href="/history/sporedi">Спореди</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content w-100">
+        <h1>Последни тргувани</h1>
+
+        <!-- ALK Card -->
+        <span th:each="issuer : ${history}">
+            <div class="card">
+                <div class="card-body">
+                    <ul>
+                        <li>
+                            <h3 th:text="${issuer.issuerCode}">KMB</h3>
+                            <p>Вкупен промет: <span th:text="${issuer.totalTurnover}">7,830,466 ден</span></p>
+                            <p>Промена во БЕСТ: <span th:text="${issuer.turnoverBEST}">7,830,466 ден</span></p>
+                            <p>Цена на последна трансакција: <span th:text="${issuer.priceForLastTransaction}">24,200.00 ден</span></p>
+                        </li>
+                    </ul>
+                    <a th:if="${issuer.issuerCode != null}" th:href="@{issuer/detali-kompanija/{code}(code=${issuer.issuerCode})}" class="btn"><span></span></a>
+                </div>
+            </div>
+        </span>
+
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>
