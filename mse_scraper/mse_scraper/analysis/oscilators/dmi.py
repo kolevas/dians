@@ -3,32 +3,23 @@ import matplotlib.pyplot as plt
 from stock_indicators.indicators.common import Quote
 from stock_indicators import indicators
 import io
+from sqlalchemy import create_engine
 
-# Step 1: Read CSV and clean temp_data
 def calcDMI(issuer, interval, start_date, end_date, short_window):
+    engine = create_engine(
+        "postgresql+psycopg2://mse_owner:CYXP4fDEiH5g@ep-bold-dream-a2fi281z.eu-central-1.aws.neon.tech:5432/mse"
+    )
 
-    df = pd.read_csv(f"temp_stocks/temp_data/{issuer}.csv")
-    df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
-    df.set_index('Date', inplace=True)
+    q = f"SELECT * FROM issuinghistory WHERE issuercode = '{issuer}' ORDER BY entrydate"
+    df = pd.read_sql_query(q, engine, index_col="idissuinghistory")
+    # df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
+    df.set_index('entrydate', inplace=True)
     df = df.loc[start_date:end_date]
 
-    df['max'] = df['max'].astype(str).str.replace('.', '').str.replace(',', '.')
-    df['min'] = df['min'].astype(str).str.replace('.', '').str.replace(',', '.')
-
-    df['max'] = pd.to_numeric(df['max'], errors='coerce')
-    df['min'] = pd.to_numeric(df['min'], errors='coerce')
-
-    df['avg_price'] = df['avg_price'].astype(str).str.replace('.', '').str.replace(',', '.')
-    df['avg_price'] = pd.to_numeric(df['avg_price'], errors='coerce')
-
-    df = df.reset_index()
-    df['Date'] = pd.to_datetime(df['Date'], format='%d.%m.%Y', errors='coerce')
-
-    # Step 5: Convert to Quote objects
     quotes = [
-        Quote(row.Date, None, row['max'], row['min'], row['avg_price'], None)
+        Quote(row.entrydate, None, row['maximumprice'], row['minimumprice'], row['avgprice'], None)
         for _, row in df.iterrows()
-        if pd.notnull(row['max']) and pd.notnull(row['min']) and pd.notnull(row['avg_price'])
+        if pd.notnull(row['maximumprice']) and pd.notnull(row['minimumprice']) and pd.notnull(row['avgprice'])
     ]
 
     results = indicators.get_dema(quotes, lookback_periods=short_window)

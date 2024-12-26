@@ -3,36 +3,23 @@ from stock_indicators.indicators.common import Quote
 from stock_indicators import indicators
 import matplotlib.pyplot as plt
 import io
-
+from sqlalchemy import create_engine
 
 def calcCCI(issuer, interval, start_date, end_date, short_window):
 
     # Step 1: Read CSV and clean temp_data
-    df = pd.read_csv(f"temp_stocks/temp_data/{issuer}.csv")
+    engine = create_engine(
+        "postgresql+psycopg2://mse_owner:CYXP4fDEiH5g@ep-bold-dream-a2fi281z.eu-central-1.aws.neon.tech:5432/mse"
+    )
+
+    q = f"SELECT * FROM issuinghistory WHERE issuercode = '{issuer}' ORDER BY entrydate"
+    df = pd.read_sql_query(q, engine, index_col="idissuinghistory")
     df=df.tail(int(interval)+20)
-    df['Date'] = pd.to_datetime(df['Date'], format='%d.%m.%Y', errors='coerce')
 
-
-
-    # Step 2: Fix 'max' and 'min' columns (convert to numeric)
-    df['max'] = df['max'].astype(str).str.replace('.', '').str.replace(',', '.')
-    df['min'] = df['min'].astype(str).str.replace('.', '').str.replace(',', '.')
-
-    df['max'] = pd.to_numeric(df['max'], errors='coerce')
-    df['min'] = pd.to_numeric(df['min'], errors='coerce')
-
-    # Step 3: Clean up 'avg_price' column
-    df['avg_price'] = df['avg_price'].astype(str).str.replace('.', '').str.replace(',', '.')
-    df['avg_price'] = pd.to_numeric(df['avg_price'], errors='coerce')
-
-    # Step 4: Parse Date column properly
-    # df['Date'] = pd.to_datetime(df['Date'], format='%d.%m.%Y', errors='coerce')
-    # print(len(df))
-    # Step 5: Convert to Quote objects
     quotes = [
-    Quote(row.Date, None, row['max'], row['min'], row['avg_price'], None)
+    Quote(row.entrydate, None, row['maximumprice'], row['minimumprice'], row['avgprice'], None)
     for _, row in df.iterrows()
-    if pd.notnull(row['max']) and pd.notnull(row['min']) and pd.notnull(row['avg_price'])
+    if pd.notnull(row['maximumprice']) and pd.notnull(row['minimumprice']) and pd.notnull(row['avgprice'])
     ]
 
     # Step 6: Calculate CCI

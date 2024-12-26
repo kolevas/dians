@@ -2,6 +2,7 @@ import datetime
 
 from flask import Flask, send_file, jsonify, request, make_response
 import polars as pl
+from stock_indicators import indicators
 
 from oscilators.dmi import calcDMI
 from oscilators.cci import calcCCI
@@ -12,18 +13,13 @@ from moving_averages import moving_avg_crossover_strategy
 from oscilators import *
 app = Flask(__name__)
 
-# @app.route('/get_names', methods=['GET'])
-# def get_issuers():
-#     df = pl.read_csv('temp_stocks/names.csv')
-#     names = df['Names'].to_list()
-#     return jsonify(names)
 
-@app.route('/generate', methods=['GET'])
+@app.route('/generate', methods=['POST'])
 def get_image():
 
-    issuer = request.args.get('issuer', 'ALK')
-    interval = request.args.get('interval', '7')
-    prikaz = request.args.get('prikaz', 'SMA')
+    issuer = request.json.get('issuer', 'ALK')
+    interval = request.json.get('interval', '7')
+    prikaz = request.json.get('prikaz', 'SMA')
 
     today = datetime.date.today()
     last = today - datetime.timedelta(days=int(interval))
@@ -64,7 +60,7 @@ def get_image():
     elif prikaz == 'SO':
         img_io=calcSO(issuer=issuer, interval=interval, start_date=last, end_date=today, short_window=short_window)
     else:
-        img_io=moving_avg_crossover_strategy(issuer=issuer, start_date=last, end_date=today, moving_avg=prikaz, short_window=short_window, long_window=long_window)
+        img_io=moving_avg_crossover_strategy(issuer=issuer, start_date=last, end_date=today, avg_type=prikaz, fast_window=short_window, slow_window=long_window)
 
     response = make_response(img_io.read())
     response.headers['Content-Type'] = 'image/png'
