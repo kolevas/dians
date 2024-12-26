@@ -84,31 +84,45 @@ public class AnalysisServiceImpl implements AnalysisService {
     }
 
     @Override
-    public void getImg(String tiker, String prikaz, String interval) {
-        String flaskUrl = "http://localhost:5000/get_image";
-//        tiker=data['tiker']
-//        interval=data['interval']
-//        prikaz = data['prikaz']
-        String jsonBody = String.format("{\"tiker\": \"%s\", \"interval\": %s}, \"prikaz\": %s}", tiker, interval, prikaz);
-        ResponseEntity<Resource> response = restTemplate.exchange(
-                flaskUrl,
-                HttpMethod.POST,
-                null,
-                Resource.class
-        );
-        StringBuilder stringBuilder=new StringBuilder();
-        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-            try (InputStream inputStream = response.getBody().getInputStream()) {
+    public void getImg(String issuer, String prikaz, String interval) {
+        String flaskUrl = "http://localhost:5000/generate";
+        String jsonBody = String.format("{\"issuer\": \"%s\", \"interval\": \"%s\", \"prikaz\": \"%s\"}", issuer, interval, prikaz);
+
+        // Prepare the HTTP request
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>(jsonBody, headers);
+
+        try {
+            // Make the HTTP POST request
+            ResponseEntity<Resource> response = restTemplate.exchange(
+                    flaskUrl,
+                    HttpMethod.POST,
+                    entity,
+                    Resource.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 // Save the image to a file
-                Path outputPath = Paths.get("src/main/resources/static/img/image_from_flask.png");
-                Files.createDirectories(outputPath.getParent());
-                Files.copy(inputStream, outputPath, StandardCopyOption.REPLACE_EXISTING);
-                stringBuilder.append("/img/image_from_flask.png");
-            } catch (IOException e) {
-                e.printStackTrace();
+                try (InputStream inputStream = response.getBody().getInputStream()) {
+                    Path outputPath = Paths.get("src/main/resources/static/img/image_from_flask.png");
+                    Files.createDirectories(outputPath.getParent());
+                    Files.copy(inputStream, outputPath, StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    // Log the exception
+                    e.printStackTrace();
+                    throw new RuntimeException("Error while saving the image", e);
+                }
+            } else {
+                // Log the error
+                System.out.println("Failed to fetch the image. Status: " + response.getStatusCode());
+                throw new RuntimeException("Failed to fetch image from Flask service");
             }
-        } else {
-            System.out.println("Failed to fetch the image. Status: " + response.getStatusCode());
+        } catch (Exception e) {
+            // Log and handle the error
+            e.printStackTrace();
+            throw new RuntimeException("Error during the HTTP request to Flask service", e);
         }
     }
+
 }

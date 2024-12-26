@@ -47,11 +47,12 @@
         }
 
         .main-content {
-            margin-left: 250px;
+            margin-left: 220px;
             padding: 30px;
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
         }
 
         h1, h2 {
@@ -94,6 +95,21 @@
         .suggestion-container p {
             font-size: 18px;
             color: #555;
+        }
+
+        /* Hide the graph frame by default */
+        .graph-frame {
+            display: none;
+        }
+
+        /* Show the graph when imageID is set */
+        .graph-wrapper {
+            display: block;
+            width: 800px;
+        }
+
+        .row{
+            display: flex;
         }
 
         .graph-frame img {
@@ -145,11 +161,12 @@
                     <p th:text="${advice==null? 'Немој да инвестираш сега':advice}"></p>
                 </div>
             </div>
-            <div class="col-md-8">
-                <div class="graph-frame">
+            <div class="graph-wrapper">
+                <div th:if="${imageID != null}" class="graph-frame">
                     <img th:src="${imageID}" alt="Graph">
                 </div>
             </div>
+
         </div>
     </div>
 </div>

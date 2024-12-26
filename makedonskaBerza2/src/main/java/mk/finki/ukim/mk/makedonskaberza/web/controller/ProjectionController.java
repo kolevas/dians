@@ -50,7 +50,7 @@ public class ProjectionController {
                                  @RequestParam String prikaz,
                                  @RequestParam String interval,
                                  Model model) {
-        String path = "/img/" + issuer + ".png";
+        String path = "/img/image_from_flask.png";
         try {
             // Call service to generate the image
             analysisService.getImg(issuer, prikaz, interval);
