@@ -13,8 +13,8 @@ from sqlalchemy import create_engine
 warnings.filterwarnings('ignore')
 
 def compute_vwma(data, window):
-    weighted_price = data['avgprice'] * data['volume']
-    total_volume = data['volume'].rolling(window=window).sum()
+    weighted_price = data['avgprice'] * data['quantity']
+    total_volume = data['quantity'].rolling(window=window).sum()
     vwma = weighted_price.rolling(window=window).sum() / total_volume
     return vwma
 
