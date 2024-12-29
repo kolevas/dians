@@ -13,7 +13,10 @@ public class RestMainController {
 
     private final RestTemplate restTemplate;
 
-    private final String FLASK_IMAGE_URL = "http://localhost:5000/generate";
+    private final String ANALYSIS_IMAGE_URL = "http://localhost:5000/generate";
+    private final String PREDICT_IMAGE_URL = "http://localhost:6000/predict";
+
+
 
     public RestMainController(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -22,10 +25,20 @@ public class RestMainController {
     @GetMapping("/get-flask-image")
     @ResponseBody
     public byte[] getImageFromFlask(@RequestParam String issuer, @RequestParam String interval, @RequestParam String prikaz) {
-        String flaskUrlWithParams = FLASK_IMAGE_URL + "?issuer=" + issuer + "&interval=" + interval + "&prikaz=" + prikaz;
+        String flaskUrlWithParams = ANALYSIS_IMAGE_URL + "?issuer=" + issuer + "&interval=" + interval + "&prikaz=" + prikaz;
 
         ResponseEntity<byte[]> response = restTemplate.getForEntity(flaskUrlWithParams, byte[].class);
 
         return response.getBody();
     }
+    @GetMapping("/get-predicted-image")
+    @ResponseBody
+    public byte[] getImageFromPrediction(@RequestParam String issuer) {
+        String flaskUrlWithParams = PREDICT_IMAGE_URL + "?issuer=" + issuer;
+
+        ResponseEntity<byte[]> response = restTemplate.getForEntity(flaskUrlWithParams, byte[].class);
+
+        return response.getBody();
+    }
+
 }

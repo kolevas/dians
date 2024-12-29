@@ -11,4 +11,7 @@ public interface IssuerService {
     List<Issuer> searchResult(String search);
     List<Issuer> searchByCode(String code);
     List<String> getAllIssuerCodes();
+
+    void getImg(String issuer);
+
 }

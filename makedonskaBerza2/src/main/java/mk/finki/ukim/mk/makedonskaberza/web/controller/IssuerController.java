@@ -7,10 +7,7 @@ import mk.finki.ukim.mk.makedonskaberza.service.HistoryService;
 import mk.finki.ukim.mk.makedonskaberza.service.IssuerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -52,5 +49,34 @@ public class IssuerController {
         model.addAttribute("c1Num", historyService.numTransationslastyear(code));
         return "detali-kompanija";
     }
+    @PostMapping("/detali-kompanija/{code}")
+    public String getStockPredictionImage(@PathVariable String code,
+                                          Model model) {
+        String imagePath = "/img/stock_prediction.png"; // File path for the generated image
+
+        try {
+            // Call service to generate the stock prediction image
+            issuerService.getImg(code);
+        } catch (Exception e) {
+            // Log the error and add an error message to the model
+            model.addAttribute("error", "Не можевме да ја генерираме проекцијата за " + code + ". Обиди се повторно.");
+            e.printStackTrace();
+            return "detali-kompanija"; // Return the details page with an error
+        }
+
+        // Fetch additional company details
+        Issuer companyDetails = issuerService.GetIssuerByCode(code);
+        if (companyDetails == null) {
+            model.addAttribute("error", "Компанијата со шифра " + code + " не постои.");
+            return "detali-kompanija";
+        }
+
+        // Add attributes to the model for rendering the page
+        model.addAttribute("companyDetails", companyDetails);
+        model.addAttribute("imageID", imagePath); // Add the generated image path to the model
+
+        return "detali-kompanija"; // Return the updated details page
+    }
+
 
 }
