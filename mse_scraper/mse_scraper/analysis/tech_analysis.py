@@ -12,7 +12,7 @@ app = Flask(__name__)
 @app.route('/generate', methods=['POST'])
 def get_image():
     issuer = request.json.get('issuer', 'ALK')
-    interval = request.json.get('interval', '7')
+    interval = request.json.get('interval', '180')
     prikaz = request.json.get('prikaz', 'SMA')
 
     today = datetime.date.today()
@@ -43,7 +43,6 @@ def get_image():
         short_window = 2
         long_window = 4
 
-    action= ''
     if prikaz == 'DMI':
         results = calcDMI(issuer=issuer, interval=interval, start_date=last, end_date=today, short_window=short_window)
         img_io = results[0]

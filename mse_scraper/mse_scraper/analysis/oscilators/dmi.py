@@ -23,8 +23,10 @@ def calcDMI(issuer, interval, start_date, end_date, short_window):
     ]
 
     results = indicators.get_dema(quotes, lookback_periods=short_window)
+    print(results[0].dema)
 
     dates = [result.date for result in results if result.dema is not None]
+    print(dates)
     demarker_values = [result.dema for result in results if result.dema is not None]
     action_var = demarker_values[len(demarker_values) - 1]
 

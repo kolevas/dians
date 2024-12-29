@@ -16,7 +16,7 @@ def calcCMO(issuer, interval, start_date, end_date, short_window):
     df = pd.read_sql_query(q, engine, index_col="idissuinghistory")
     df = df.tail(int(interval)+20)
     df.dropna(inplace=True)
-
+    print(df)
     quotes = [
         Quote(row.entrydate, None, row['maximumprice'], row['minimumprice'], row['avgprice'], None)
         for _, row in df.iterrows()
@@ -25,7 +25,8 @@ def calcCMO(issuer, interval, start_date, end_date, short_window):
 
     # Step 6: Calculate CMO (Chande Momentum Oscillator)
     results = indicators.get_cmo(quotes, 20)
-
+    for i in range(0, len(results)):
+        print(results[i].cmo)
     # Step 7: Extract dates and CMO values for plotting
     dates = [result.date for result in results if result.cmo is not None]
     cmo_values = [result.cmo for result in results if result.cmo is not None]

@@ -75,8 +75,8 @@ def moving_avg_crossover_strategy(issuer, start_date, end_date,
     elif stock_data['Position'].iloc[-1] == -1:
         action = "SELL"
 
-    plt.text(stock_data.index[-1], stock_data[fast_col].iloc[-1], action,
-             fontsize=12, verticalalignment='bottom', horizontalalignment='right', color='blue')
+    # plt.text(stock_data.index[-1], stock_data[fast_col].iloc[-1], action,
+    #          fontsize=12, verticalalignment='bottom', horizontalalignment='right', color='blue')
     plt.ylabel('Price in MKD', fontsize=16)
     plt.xlabel('Date', fontsize=16)
     plt.title(f"{issuer} - {avg_type} Crossover Strategy", fontsize=20)
