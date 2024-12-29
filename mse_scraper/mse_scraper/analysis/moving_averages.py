@@ -19,7 +19,7 @@ def compute_vwma(data, window):
     return vwma
 
 def moving_avg_crossover_strategy(issuer, start_date, end_date,
-                                   fast_window, slow_window, avg_type):
+                                   fast_window, slow_window, avg_type, interval):
 
     engine = create_engine(
         "postgresql+psycopg2://mse_owner:CYXP4fDEiH5g@ep-bold-dream-a2fi281z.eu-central-1.aws.neon.tech:5432/mse"
@@ -29,8 +29,7 @@ def moving_avg_crossover_strategy(issuer, start_date, end_date,
     stock_data = pd.read_sql_query(q, engine, index_col="idissuinghistory")
     stock_data.set_index('entrydate', inplace=True)
 
-    stock_data = stock_data.loc[start_date:end_date]
-
+    stock_data = stock_data.tail(pd.to_numeric(interval))
     fast_col = f"{fast_window}_{avg_type}"
     slow_col = f"{slow_window}_{avg_type}"
 
@@ -52,7 +51,9 @@ def moving_avg_crossover_strategy(issuer, start_date, end_date,
         stock_data[fast_col] = compute_vwma(stock_data, fast_window)
         stock_data[slow_col] = compute_vwma(stock_data, slow_window)
 
-    stock_data['Signal'] = np.where(stock_data[fast_col] > stock_data[slow_col], 1.0, 0.0)
+
+    signal_values = (stock_data[fast_col] > stock_data[slow_col]).astype(float)
+    stock_data['Signal'] = signal_values
     stock_data['Position'] = stock_data['Signal'].diff()
 
     plt.figure(figsize=(20, 10))
@@ -68,7 +69,14 @@ def moving_avg_crossover_strategy(issuer, start_date, end_date,
              stock_data[fast_col][stock_data['Position'] == -1],
              'v', markersize=15, color='red', alpha=0.7, label='Sell')
 
+    action = "HOLD"
+    if stock_data['Position'].iloc[-1] == 1:
+        action = "BUY"
+    elif stock_data['Position'].iloc[-1] == -1:
+        action = "SELL"
 
+    plt.text(stock_data.index[-1], stock_data[fast_col].iloc[-1], action,
+             fontsize=12, verticalalignment='bottom', horizontalalignment='right', color='blue')
     plt.ylabel('Price in MKD', fontsize=16)
     plt.xlabel('Date', fontsize=16)
     plt.title(f"{issuer} - {avg_type} Crossover Strategy", fontsize=20)
@@ -79,4 +87,5 @@ def moving_avg_crossover_strategy(issuer, start_date, end_date,
     image_buffer.seek(0)
     plt.close()
 
-    return image_buffer
+
+    return image_buffer, action

@@ -39,6 +39,19 @@ def calcCMO(issuer, interval, start_date, end_date, short_window):
     plt.axhline(y=-50, color='red', linestyle='--', label="Lower Level (-50)")
 
     # Customize plot
+    action_var = cmo_values[-1] if cmo_values else None
+
+    if action_var is not None:
+        if action_var < -50:
+            action = "BUY"
+        elif action_var > 50:
+            action = "SELL"
+        else:
+            action = "HOLD"
+    else:
+        action = "NO DATA"
+    plt.text(dates[-1], cmo_values[-1], action, fontsize=12, verticalalignment='bottom', horizontalalignment='right',
+             color='blue')
     plt.title("Chande Momentum Oscillator (CMO)")
     plt.xlabel("Date")
     plt.ylabel("CMO Value")
@@ -50,4 +63,5 @@ def calcCMO(issuer, interval, start_date, end_date, short_window):
     img_io.seek(0)
     plt.close()
 
-    return img_io
+
+    return img_io, action

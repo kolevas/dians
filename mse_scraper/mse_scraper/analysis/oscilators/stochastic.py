@@ -11,7 +11,7 @@ def calcSO(issuer, interval, start_date, end_date, short_window):
         "postgresql+psycopg2://mse_owner:CYXP4fDEiH5g@ep-bold-dream-a2fi281z.eu-central-1.aws.neon.tech:5432/mse"
     )
 
-    qq = f"SELECT * FROM issuinghistory WHERE issuercode = '{issuer}' ORDER BY entrydate"
+    q = f"SELECT * FROM issuinghistory WHERE issuercode = '{issuer}' ORDER BY entrydate"
     df = pd.read_sql_query(q, engine, index_col="idissuinghistory")
     df = df.tail(int(interval) + 14)
 
@@ -47,6 +47,20 @@ def calcSO(issuer, interval, start_date, end_date, short_window):
     plt.axhline(y=20, color='red', linestyle='--', label="Oversold (20)")
 
     # Customize plot
+    action = "NO DATA"
+    if len(stoch_k_values) > 1 and len(stoch_d_values) > 1:
+        current_k = stoch_k_values[-1]
+        current_d = stoch_d_values[-1]
+        previous_k = stoch_k_values[-2]
+        previous_d = stoch_d_values[-2]
+
+        if current_k < 20 and current_d < 20 and previous_k < previous_d and current_k > current_d:
+            action = "BUY"
+        elif current_k > 80 and current_d > 80 and previous_k > previous_d and current_k < current_d:
+            action = "SELL"
+        else:
+            action = "HOLD"
+    plt.text(dates[-1], stoch_k_values[-1], action, fontsize=12, verticalalignment='bottom', horizontalalignment='right', color='blue')
     plt.title("Stochastic Oscillator")
     plt.xlabel("Date")
     plt.ylabel("Stochastic Value")
@@ -58,4 +72,5 @@ def calcSO(issuer, interval, start_date, end_date, short_window):
     img_io.seek(0)
     plt.close()
 
-    return img_io
+
+    return img_io, action

@@ -38,6 +38,19 @@ def calcRSI(issuer, interval, start_date, end_date, short_window):
     plt.axhline(y=30, color='red', linestyle='--', label="Oversold (30)")
 
     # Customize plot
+    action_var = rsi_values[-1] if rsi_values else None
+
+    if action_var is not None:
+        if action_var < 30:
+            action = "BUY"
+        elif action_var > 70:
+            action = "SELL"
+        else:
+            action = "HOLD"
+    else:
+        action = "NO DATA"
+    plt.text(dates[-1], rsi_values[-1], action, fontsize=12, verticalalignment='bottom', horizontalalignment='right',
+             color='blue')
     plt.title("Relative Strength Index (RSI)")
     plt.xlabel("Date")
     plt.ylabel("RSI Value")
@@ -49,4 +62,5 @@ def calcRSI(issuer, interval, start_date, end_date, short_window):
     img_io.seek(0)
     plt.close()
 
-    return img_io
+
+    return img_io, action

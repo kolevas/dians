@@ -38,6 +38,20 @@ def calcCCI(issuer, interval, start_date, end_date, short_window):
     plt.axhline(y=-100, color='red', linestyle='--', label="Oversold (-100)")
 
     # Customize plot
+    action_var = cci_values[-1] if cci_values else None
+
+    if action_var is not None:
+        if action_var < -100:
+            action = "BUY"
+        elif action_var > 100:
+            action = "SELL"
+        else:
+            action = "HOLD"
+    else:
+        action = "NO DATA"
+    plt.text(dates[-1], cci_values[-1], action, fontsize=12, verticalalignment='bottom', horizontalalignment='right',
+             color='blue')
+
     plt.title("Commodity Channel Index (CCI)")
     plt.xlabel("Date")
     plt.ylabel("CCI Value")
@@ -49,4 +63,5 @@ def calcCCI(issuer, interval, start_date, end_date, short_window):
     img_io.seek(0)
     plt.close()
 
-    return img_io
+
+    return img_io, action
