@@ -97,11 +97,6 @@
             color: #555;
         }
 
-        /* Hide the graph frame by default */
-        .graph-frame {
-            display: none;
-        }
-
         /* Show the graph when imageID is set */
         .graph-wrapper {
             display: block;
@@ -155,16 +150,11 @@
                             <option th:each="option : ${intervali}" th:value="${option}" th:text="${option}" th:selected="${option == intervali[0]}"></option>
                         </select>
                     </div>
-                    <input type="submit" value="Submit">
+                    <input type="submit" value="Прикажи">
                 </form>
-                <div class="suggestion-container mt-4">
-                    <p th:text="${advice==null? 'Немој да инвестираш сега':advice}"></p>
-                </div>
             </div>
-            <div class="graph-wrapper">
-                <div th:if="${imageID == null}" class="graph-frame">
-                    <img th:src="${imageID}" alt="Graph">
-                </div>
+            <div class="col-md-8">
+                    <img style="width: 100%" th:src="${imageID}" alt="Одберете параметри и кликнете на “Прикажи“ за да се прикаже графикот">
             </div>
 
         </div>

@@ -41,6 +41,16 @@ public class IssuerController {
 
         //za podatoci za poslednata godina (treba da se dodade samo vo html, kako kaj sporedba slicno)
 
+        String imagePath = "/img/stock_prediction_graph.png";
+
+        try {
+            issuerService.pricePredictionImage(code);
+        } catch (Exception e) {
+            model.addAttribute("error", "Не можевме да ја генерираме проекцијата за " + code + ". Обиди се повторно.");
+            e.printStackTrace();
+            return "detali-kompanija";
+        }
+        model.addAttribute("imageID", imagePath);
         Issuer issuer1 = issuerService.GetIssuerByCode(code);
         model.addAttribute("c1",code.toUpperCase());
         model.addAttribute("c1Max", historyService.avgMaxPrice(code));
@@ -49,34 +59,32 @@ public class IssuerController {
         model.addAttribute("c1Num", historyService.numTransationslastyear(code));
         return "detali-kompanija";
     }
-    @PostMapping("/detali-kompanija/{code}")
-    public String getStockPredictionImage(@PathVariable String code,
-                                          Model model) {
-        String imagePath = "/img/stock_prediction.png"; // File path for the generated image
-
-        try {
-            // Call service to generate the stock prediction image
-            issuerService.getImg(code);
-        } catch (Exception e) {
-            // Log the error and add an error message to the model
-            model.addAttribute("error", "Не можевме да ја генерираме проекцијата за " + code + ". Обиди се повторно.");
-            e.printStackTrace();
-            return "detali-kompanija"; // Return the details page with an error
-        }
-
-        // Fetch additional company details
-        Issuer companyDetails = issuerService.GetIssuerByCode(code);
-        if (companyDetails == null) {
-            model.addAttribute("error", "Компанијата со шифра " + code + " не постои.");
-            return "detali-kompanija";
-        }
-
-        // Add attributes to the model for rendering the page
-        model.addAttribute("companyDetails", companyDetails);
-        model.addAttribute("imageID", imagePath); // Add the generated image path to the model
-
-        return "detali-kompanija"; // Return the updated details page
-    }
+//    @PostMapping("/detali-kompanija/{code}")
+//    public String getStockPredictionImage(@PathVariable String code,
+//                                          Model model) {
+//        String imagePath = "/img/stock_prediction.png";
+//
+//        try {
+//            issuerService.pricePredictionImage(code);
+//        } catch (Exception e) {
+//            model.addAttribute("error", "Не можевме да ја генерираме проекцијата за " + code + ". Обиди се повторно.");
+//            e.printStackTrace();
+//            return "detali-kompanija";
+//        }
+//
+//        // Fetch additional company details
+//        Issuer companyDetails = issuerService.GetIssuerByCode(code);
+//        if (companyDetails == null) {
+//            model.addAttribute("error", "Компанијата со шифра " + code + " не постои.");
+//            return "detali-kompanija";
+//        }
+//
+//        // Add attributes to the model for rendering the page
+//        model.addAttribute("companyDetails", companyDetails);
+//        model.addAttribute("imageID", imagePath); // Add the generated image path to the model
+//
+//        return "detali-kompanija"; // Return the updated details page
+//    }
 
 
 }

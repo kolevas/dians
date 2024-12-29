@@ -33,8 +33,6 @@ public interface HistoryRepository extends JpaRepository<IssuerHistory, Integer>
 
 
 
-    //    @Query("SELECT ih FROM IssuerHistory ih ORDER BY ih.averagePrice DESC LIMIT 5")
-//    List<IssuerHistory> findTopByEntryDateAndAveragePrice(@Param("count") int count);
     public List<IssuerHistory> findIssuerHistoryByIssuerCodeIgnoreCase(String issuercode);
     public IssuerHistory findFirstByIssuerCodeOrderByIdissuinghistoryDesc(String code);
 }

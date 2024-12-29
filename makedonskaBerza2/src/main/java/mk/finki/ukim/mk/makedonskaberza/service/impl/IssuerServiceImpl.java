@@ -58,7 +58,8 @@ public class IssuerServiceImpl implements IssuerService {
     }
 
     // New getImg Function
-    public void getImg(String issuercode) {
+    @Override
+    public void pricePredictionImage(String issuercode) {
         String flaskUrl = "http://localhost:6000/predict";
         String jsonBody = String.format(
                 "{\"issuer\": \"%s\"}", issuercode

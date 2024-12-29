@@ -29,32 +29,6 @@ public class AnalysisServiceImpl implements AnalysisService {
         this.restTemplate = restTemplate;
     }
 
-//    @Override
-//    public List<String>getNames() {
-//        String flaskUrl = "http://localhost:5000/get_names";
-//
-//        // RestTemplate to make the GET request
-//        RestTemplate restTemplate = new RestTemplate();
-//
-//        try {
-//            // Make GET request and receive response as String
-//            String jsonResponse = restTemplate.getForObject(flaskUrl, String.class);
-//
-//            // Convert JSON string to List<String>
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            List<String> strings = objectMapper.readValue(jsonResponse, new TypeReference<List<String>>() {});
-//
-//            // Process the received strings
-//            System.out.println("Received strings from Flask: " + strings);
-//
-//            // Return success response
-//            return strings;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return List.of();
-//    }
-
     @Override
     public List<String> getPrikazi() {
         List<String> prikazi = new ArrayList<>();
@@ -79,7 +53,6 @@ public class AnalysisServiceImpl implements AnalysisService {
         vreminja.add("30");
         vreminja.add("60");
         vreminja.add("120");
-        vreminja.add("180");
         return vreminja;
     }
 

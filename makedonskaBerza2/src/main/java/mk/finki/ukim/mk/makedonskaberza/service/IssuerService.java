@@ -12,6 +12,6 @@ public interface IssuerService {
     List<Issuer> searchByCode(String code);
     List<String> getAllIssuerCodes();
 
-    void getImg(String issuer);
+    void pricePredictionImage(String issuer);
 
 }

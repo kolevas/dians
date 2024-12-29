@@ -88,7 +88,15 @@ public class HistoryServiceImpl implements HistoryService {
 
     @Override
     public List<IssuerHistory> getTopCompanies(int count) {
-        return repository.findTop5AveragePriceByDistinctIssuers();
+        List<IssuerHistory> topComp = new ArrayList<>();
+        topComp.add(repository.findIssuerHistoryByIssuerCodeIgnoreCase("alk").get(0));
+        topComp.add(repository.findIssuerHistoryByIssuerCodeIgnoreCase("kmb").get(0));
+        topComp.add(repository.findIssuerHistoryByIssuerCodeIgnoreCase("stb").get(0));
+        topComp.add(repository.findIssuerHistoryByIssuerCodeIgnoreCase("ttk").get(0));
+        topComp.add(repository.findIssuerHistoryByIssuerCodeIgnoreCase("tnb").get(0));
+        topComp.add(repository.findIssuerHistoryByIssuerCodeIgnoreCase("mpt").get(0));
+
+        return topComp;
     }
 
 
