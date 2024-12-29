@@ -18,4 +18,6 @@ public interface HistoryService {
     public double avgMaxPrice(String code);
     public double avgMinPrice(String code);
 
+    public List<String> codesForAnalysis();
+
 }

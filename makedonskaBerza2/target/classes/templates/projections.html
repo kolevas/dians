@@ -55,13 +55,16 @@
             min-height: 100vh;
         }
 
-        h1, h2 {
+        h2 {
             color: #333;
             margin-bottom: 15px;
-        }
-
-        h2 {
             font-size: 24px;
+        }
+        .sidebar h1 {
+            font-family: 'Lusitana', sans-serif;
+            font-size: 36px;
+            margin-bottom: 30px;
+            text-align: center;
         }
 
         form {
@@ -119,15 +122,14 @@
 <div class="d-flex">
     <!-- Sidebar -->
     <div class="sidebar">
-        <h1>Техничка анализа</h1>
-        <a href="/home">Home</a>
-        <a href="/projections" class="active">Проекции</a>
+        <h1>Stock Market Predictor</h1>
+        <button onclick="history.back()">&larr; Назад</button>
         <a href="/history">Историски Податоци</a>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
-        <h2>Идни проекции</h2>
+        <h2>Техничка анализа</h2>
         <div class="row">
             <div class="col-md-4">
                 <form id="forma1" th:action="@{/projection}" method="post">
@@ -135,7 +137,7 @@
                     <div>
                         <label for="issuer">Изберете издавач</label>
                         <select id="issuer" name="issuer">
-                            <option th:each="option : ${optionsIssuer}" th:value="${option}" th:text="${option}" th:selected="${option == optionsIssuer[0]}"></option>
+                            <option th:each="option : ${optionsIssuer}" th:value="${option}" th:text="${option}" th:selected="ALK"></option>
                         </select>
                     </div>
                     <div>
@@ -154,7 +156,10 @@
                 </form>
             </div>
             <div class="col-md-8">
-                    <img style="width: 100%" th:src="${imageID}" alt="Одберете параметри и кликнете на “Прикажи“ за да се прикаже графикот">
+                <img style="width: 100%"
+                     th:src="${imageID}"
+
+                     alt="Одберете параметри и кликнете на “Прикажи“ за да се прикаже графикот"/>
             </div>
 
         </div>

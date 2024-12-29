@@ -1,26 +1,24 @@
 package mk.finki.ukim.mk.makedonskaberza.service.impl;
 
-import mk.finki.ukim.mk.makedonskaberza.model.Issuer;
 import mk.finki.ukim.mk.makedonskaberza.model.IssuerHistory;
 import mk.finki.ukim.mk.makedonskaberza.repository.HistoryRepository;
 import mk.finki.ukim.mk.makedonskaberza.service.HistoryService;
-import org.springframework.data.domain.PageRequest;
+import mk.finki.ukim.mk.makedonskaberza.service.IssuerService;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class HistoryServiceImpl implements HistoryService {
     private final HistoryRepository repository;
+    private final IssuerService issuerService;
 
-    public HistoryServiceImpl(HistoryRepository repository) {
+    public HistoryServiceImpl(HistoryRepository repository, IssuerService issuerService) {
         this.repository = repository;
+        this.issuerService = issuerService;
     }
 
 
@@ -85,6 +83,12 @@ public class HistoryServiceImpl implements HistoryService {
         return  Math.round(min * 100.0) / 100.0;
     }
 
+
+    @Override
+    public List<String> codesForAnalysis(){
+        return issuerService.getAllIssuerCodes().stream()
+                .filter(code -> repository.findIssuerHistoryByIssuerCodeIgnoreCase(code).size()>30).toList();
+    }
 
     @Override
     public List<IssuerHistory> getTopCompanies(int count) {

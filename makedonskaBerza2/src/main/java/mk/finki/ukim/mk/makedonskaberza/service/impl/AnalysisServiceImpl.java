@@ -78,7 +78,7 @@ public class AnalysisServiceImpl implements AnalysisService {
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 // Save the image to a file
                 try (InputStream inputStream = response.getBody().getInputStream()) {
-                    Path outputPath = Paths.get("src/main/resources/static/img/image_from_flask.png");
+                    Path outputPath = Paths.get(String.format("src/main/resources/static/img/image_from_flask_%s_%s_%s.png", issuer, prikaz,interval));
                     Files.createDirectories(outputPath.getParent());
                     Files.copy(inputStream, outputPath, StandardCopyOption.REPLACE_EXISTING);
                 } catch (IOException e) {

@@ -2,8 +2,8 @@ package mk.finki.ukim.mk.makedonskaberza.web.controller;
 
 
 import mk.finki.ukim.mk.makedonskaberza.service.AnalysisService;
+import mk.finki.ukim.mk.makedonskaberza.service.HistoryService;
 import mk.finki.ukim.mk.makedonskaberza.service.IssuerService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,34 +11,31 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/projection")
 public class ProjectionController {
 
-    private final IssuerService issuerService;
-    private final AnalysisService analysisService;
 
-    public ProjectionController(IssuerService issuerService, AnalysisService analysisService) {
-        this.issuerService = issuerService;
+    private final AnalysisService analysisService;
+    private final HistoryService historyService;
+    private final IssuerService issuerService;
+
+    public ProjectionController(AnalysisService analysisService, HistoryService historyService, IssuerService issuerService) {
         this.analysisService = analysisService;
+        this.historyService = historyService;
+        this.issuerService = issuerService;
     }
 
     @GetMapping
     public String getProjectionsPage(Model model) {
-        String value="/img/ADIN.png";
         List<String> optionsIssuer=issuerService.getAllIssuerCodes();
         List<String> prikazi = analysisService.getPrikazi();
         List<String> intervali = analysisService.getVreminja();
         model.addAttribute("optionsIssuer", optionsIssuer);
         model.addAttribute("prikazi", prikazi);
         model.addAttribute("intervali", intervali);
-        model.addAttribute("imageID", value);
         return "projections";
     }
 
@@ -50,7 +47,8 @@ public class ProjectionController {
                                  @RequestParam String prikaz,
                                  @RequestParam String interval,
                                  Model model) {
-        String path = "/img/image_from_flask.png";
+        String path = String.format("/img/image_from_flask_%s_%s_%s.png", issuer,prikaz,interval);
+
         try {
             // Call service to generate the image
             analysisService.getImg(issuer, prikaz, interval);
