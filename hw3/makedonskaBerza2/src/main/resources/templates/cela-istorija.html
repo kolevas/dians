@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Details</title>
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f5;
+            padding: 40px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 220px;
+            height: 100vh;
+            background-color: #004d40;
+            color: white;
+            padding: 30px 20px;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .sidebar button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .sidebar h1 {
+            font-size: 26px;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .sidebar button:hover {
+            color: #4caf50;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 30px;
+        }
+
+        h3 {
+            font-size: 24px;
+        }
+
+        /* Stock Market Section */
+        #price-chart {
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        #price-chart h2 {
+            font-size: 28px;
+            color: #004d40;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .long-line {
+            border: none;
+            border-top: 2px solid #004E41;
+            width: 100%;
+            margin: 30px 0;
+        }
+
+        /* Button Styling */
+        .btn-report {
+            background-color: #004E41;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-report:hover {
+            background-color: #006B55;
+        }
+
+        /* Table Styling */
+        .table {
+            width: 100%;
+            background-color: white;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #004E41;
+            color: white;
+        }
+
+        .table td {
+            font-size: 18px;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .footer-note {
+            font-size: 16px;
+            color: #555;
+            margin-top: 30px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <button onclick="history.back()">&larr; Назад</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 th:text="${allHistory[0].issuerCode}">Комерцијална Банка (KMB)</h1>
+        <form th:method="GET" th:action="@{/history/istorija-izdavac}">
+            <input hidden="hidden" name="issCode" th:value="${allHistory[0].issuerCode}">
+            <label for="startDate">Почетен датум</label>
+            <input type="date" id="startDate" name="startDate">
+
+            <label for="endDate">Краен датум</label>
+            <input type="date" id="endDate" name="endDate">
+
+            <button type="submit">Пребарај</button>
+        </form>
+
+        <div>
+            <form th:method="GET" th:action="@{/projection}">
+                <button type="submit">Анализирај</button>
+            </form>
+            <table>
+                <thead>
+                <tr>
+                    <th>Датум</th>
+                    <th>Цена на последна трансакција</th>
+                    <th>Max</th>
+                    <th>Мин</th>
+                    <th>Промет во БЕСТ</th>
+                    <th>Вкупен промет</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="ih : ${allHistory}">
+                    <td th:text="${ih.getEntryDate()}">/</td>
+                    <td th:text="${ih.getPriceForLastTransaction()}">/</td>
+                    <td th:text="${ih.getMaximumPrice()}">/</td>
+                    <td th:text="${ih.getMinimumPrice()}">/</td>
+                    <td th:text="${ih.getTurnoverBEST()}">/</td>
+                    <td th:text="${ih.getTotalTurnover()}">/</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
