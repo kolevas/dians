@@ -1,0 +1,2 @@
+[scrapy]
+settings = mse_scraper.settings
