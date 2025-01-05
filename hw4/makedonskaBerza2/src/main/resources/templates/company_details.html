@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="mk" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Details</title>
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f5;
+            padding: 40px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 220px;
+            height: 100vh;
+            background-color: #004d40;
+            color: white;
+            padding: 30px 20px;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .sidebar button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .sidebar h1 {
+            font-size: 26px;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .sidebar button:hover {
+            color: #4caf50;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 30px;
+        }
+
+        h3 {
+            font-size: 24px;
+        }
+
+        /* Stock Market Section */
+        #price-chart {
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        #price-chart h2 {
+            font-size: 28px;
+            color: #004d40;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .long-line {
+            border: none;
+            border-top: 2px solid #004E41;
+            width: 100%;
+            margin: 30px 0;
+        }
+
+        /* Button Styling */
+        .btn-report {
+            background-color: #004E41;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-report:hover {
+            background-color: #006B55;
+        }
+
+        /* Table Styling */
+        .table {
+            width: 100%;
+            background-color: white;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #004E41;
+            color: white;
+        }
+
+        .table td {
+            font-size: 18px;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .footer-note {
+            font-size: 16px;
+            color: #555;
+            margin-top: 30px;
+        }
+
+        .graph-wrapper {
+            display: block;
+            width: 800px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <button onclick="history.back()">&larr; Назад</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 th:text="${history.issuerCode}">Комерцијална Банка (KMB)</h1>
+
+        <!-- Stock Market Section -->
+        <div id="price-chart">
+            <form th:method="GET" th:action="@{/issuer/company-details/predict/{issuerCode}(issuerCode=${history.issuerCode})}">
+            <h2>Движење на цена</h2>
+            <div class="graph-wrapper">
+                <img style="width: 100%" th:src="'data:image/png;base64,' + ${base64Image}"
+                     alt="Со клик на копчето „Генерирај“ ќе се генерира граф што ќе покаже какво би било движењето на цената во иднина">
+                <input type="submit" value="Генерирај">
+            </div>
+            </form>
+        </div>
+
+        <hr class="long-line">
+
+        <!-- Transaction Data Section -->
+        <div class="section">
+            <form th:method="GET" th:action="@{/history/issuer-history}">
+                <button type="submit" id="issCode" th:name="issCode" th:value="${history.issuerCode}">Повеќе -></button>
+            </form>
+            <h2>Податоци за последната трансакција</h2>
+            <ul>
+                <li th:text="'Сума: ' + ${history.totalTurnover}">Сума: 250000</li>
+                <li th:text="'Максимум: ' + ${history.maximumPrice}">Максимум: 3000</li>
+                <li th:text="'Минимум: ' + ${history.minimumPrice}">Минимум: 2000</li>
+                <li th:text="'Промена: ' + ${history.priceForLastTransaction}">Промена: 150</li>
+            </ul>
+        </div>
+
+        <hr class="long-line">
+
+        <!-- Report Section -->
+        <!--        <div class="section">-->
+        <!--            <h2>Извештај за компанијата</h2>-->
+        <!--            <p>-->
+        <!--                Со клик на копчето “Превземи извештај“ вие ќе можете да генерирате извештај за специфични временски-->
+        <!--                периоди и да ги прилагодуваат параметрите на предвидувањата за оваа компанија.-->
+        <!--            </p>-->
+        <!--            <a href="#" class="btn-report" th:href="@{/history/report/{code}(code=${issuer.issuercode})}">Превземи извештај</a>-->
+        <!--        </div>-->
+
+        <!--        <hr class="long-line">-->
+
+        <!-- Company Profile Section -->
+        <div class="section">
+            <h3>Дејност</h3>
+            <p th:text="${issuer.getCompanyProfile()}">
+                Комерцијална Банка е водечка банка во Македонија...
+            </p>
+        </div>
+
+        <hr class="long-line">
+
+        <!-- Contact Info Section -->
+        <div class="contact-info">
+            <p><strong>Адреса:</strong> <span th:text="${issuer.address}">Улица 123</span></p>
+            <p><strong>Град:</strong> <span th:text="${issuer.city}">Скопје</span></p>
+            <p><strong>Е-пошта:</strong> <span th:text="${issuer.email}">example@bank.com</span></p>
+            <p><strong>Лице за контакт:</strong> <span th:text="${issuer.contactPerson}">Јане</span></p>
+            <p><strong>Телефон:</strong> <span th:text="${issuer.contact_phone}">+389 70 123 456</span></p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
