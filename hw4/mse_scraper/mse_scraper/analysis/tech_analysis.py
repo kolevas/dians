@@ -1,11 +1,11 @@
 import datetime
 from flask import Flask, request, make_response
-from strategies.dmi import calcDMI
-from strategies.cci import calcCCI
-from strategies.cmo import calcCMO
-from strategies.rsi import calcRSI
-from strategies.stochastic import calcSO
-from strategies.moving_averages import moving_avg_crossover_strategy
+from mse_scraper.analysis.strategies.indicators.dmi import calcDMI
+from mse_scraper.analysis.strategies.indicators.cci import calcCCI
+from mse_scraper.analysis.strategies.indicators.cmo import calcCMO
+from mse_scraper.analysis.strategies.indicators.rsi import calcRSI
+from mse_scraper.analysis.strategies.indicators.stochastic import calcSO
+from mse_scraper.analysis.strategies.indicators.moving_averages import moving_avg_crossover_strategy
 
 app = Flask(__name__)
 
@@ -31,27 +31,27 @@ def get_image():
     short_window, long_window = intervals.get(interval, (2, 4))
 
     if prikaz == 'DMI':
-        results = calcDMI(issuer=issuer, interval=interval, start_date=last, end_date=today, short_window=short_window)
+        results = calcDMI(issuer=issuer, interval=interval, short_window=short_window)
         img_io = results[0]
         action = results[1]
     elif prikaz == 'CCI':
-        results = calcCCI(issuer=issuer, interval=interval, start_date=last, end_date=today, short_window=short_window)
+        results = calcCCI(issuer=issuer, interval=interval)
         img_io = results[0]
         action = results[1]
     elif prikaz == 'CMO':
-        results = calcCMO(issuer=issuer, interval=interval, start_date=last, end_date=today, short_window=short_window)
+        results = calcCMO(issuer=issuer, interval=interval)
         img_io = results[0]
         action = results[1]
     elif prikaz == 'RSI':
-        results = calcRSI(issuer=issuer, interval=interval, start_date=last, end_date=today, short_window=short_window)
+        results = calcRSI(issuer=issuer, interval=interval)
         img_io = results[0]
         action = results[1]
     elif prikaz == 'SO':
-        results = calcSO(issuer=issuer, interval=interval, start_date=last, end_date=today, short_window=short_window)
+        results = calcSO(issuer=issuer, interval=interval)
         img_io = results[0]
         action = results[1]
     else:
-        results = moving_avg_crossover_strategy(issuer=issuer, start_date=last, end_date=today, avg_type=prikaz, fast_window=short_window, slow_window=long_window, interval=interval)
+        results = moving_avg_crossover_strategy(issuer=issuer, avg_type=prikaz, fast_window=short_window, slow_window=long_window, interval=interval)
         img_io = results[0]
         action = results[1]
 
