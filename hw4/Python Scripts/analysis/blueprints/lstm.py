@@ -7,13 +7,13 @@ from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
 from io import BytesIO
 from datetime import timedelta
-from analysis.utilities import engines
+from utilities import my_engine
 
 # Create the Blueprint
 lstm_blueprint = Blueprint('lstm_blueprint', __name__)
 
 def fetch_stock_data(issuer_code):
-    engine = engines.my_engine()
+    engine = my_engine()
 
     query = """
     SELECT entrydate, lasttransactionprice

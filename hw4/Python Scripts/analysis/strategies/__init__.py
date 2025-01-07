@@ -1,0 +1,1 @@
+from .moving_averages import moving_avg_crossover_strategy

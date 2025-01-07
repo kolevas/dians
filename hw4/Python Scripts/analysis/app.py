@@ -1,5 +1,9 @@
 from flask import Flask
 from blueprints import lstm_blueprint, tech_analysis_blueprint
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 app = Flask(__name__)
 

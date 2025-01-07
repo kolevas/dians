@@ -1,11 +1,10 @@
-import datetime
 from flask import Blueprint, request, make_response, jsonify
-from analysis.strategies.indicators.dmi import calcDMI
-from analysis.strategies.indicators.cci import calcCCI
-from analysis.strategies.indicators.cmo import calcCMO
-from analysis.strategies.indicators.rsi import calcRSI
-from analysis.strategies.indicators.stochastic import calcSO
-from analysis.strategies.moving_averages import moving_avg_crossover_strategy
+from indicators.dmi import calcDMI
+from indicators.cci import calcCCI
+from indicators.cmo import calcCMO
+from indicators.rsi import calcRSI
+from indicators.stochastic import calcSO
+from strategies.moving_averages import moving_avg_crossover_strategy
 
 # Create the Blueprint
 tech_analysis_blueprint = Blueprint('tech_analysis', __name__)

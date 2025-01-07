@@ -4,7 +4,7 @@ import ta
 from ta.trend import WMAIndicator
 import warnings
 import io
-from analysis.utilities import engines
+from analysis.utilities.engines import my_engine
 
 warnings.filterwarnings('ignore')
 
@@ -16,7 +16,7 @@ def compute_vwma(data, window):
 
 def moving_avg_crossover_strategy(issuer,
                                    fast_window, slow_window, avg_type, interval):
-    engine = engines.my_engine()
+    engine = my_engine()
 
     q = f"SELECT * FROM issuinghistory WHERE issuercode = '{issuer}' ORDER BY entrydate"
     stock_data = pd.read_sql_query(q, engine, index_col="idissuinghistory")
