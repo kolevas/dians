@@ -1,0 +1,1 @@
+from mse_scraper import spiders

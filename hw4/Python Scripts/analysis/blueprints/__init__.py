@@ -1,2 +1,2 @@
-from .lstm import lstm_blueprint
-from .tech_analysis import tech_analysis_blueprint
+from analysis.blueprints.lstm import lstm_blueprint
+from analysis.blueprints.tech_analysis import tech_analysis_blueprint

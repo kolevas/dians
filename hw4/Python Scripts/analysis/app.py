@@ -1,7 +1,11 @@
 from flask import Flask
-from blueprints import lstm_blueprint, tech_analysis_blueprint
+from analysis.blueprints import lstm_blueprint, tech_analysis_blueprint
 import sys
 import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 

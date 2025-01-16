@@ -1,4 +1,1 @@
-import blueprints
-import indicators
-import strategies
-import utilities
+from analysis import blueprints, indicators, strategies, utilities

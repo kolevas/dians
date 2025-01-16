@@ -1,10 +1,12 @@
 from flask import Blueprint, request, make_response, jsonify
-from indicators.dmi import calcDMI
-from indicators.cci import calcCCI
-from indicators.cmo import calcCMO
-from indicators.rsi import calcRSI
-from indicators.stochastic import calcSO
-from strategies.moving_averages import moving_avg_crossover_strategy
+from analysis.indicators.dmi import calcDMI
+from analysis.indicators.cci import calcCCI
+from analysis.indicators.cmo import calcCMO
+from analysis.indicators.rsi import calcRSI
+from analysis.indicators.stochastic import calcSO
+from analysis.strategies.moving_averages import moving_avg_crossover_strategy
+import traceback
+
 
 # Create the Blueprint
 tech_analysis_blueprint = Blueprint('tech_analysis', __name__)
@@ -66,4 +68,4 @@ def generate_image():
 
     except Exception as e:
         # Return an error response in case of failure
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": str(e), "traceback": traceback.format_exc()}), 500

@@ -1,4 +1,1 @@
-# This package will contain the spiders of your Scrapy project
-#
-# Please refer to the documentation for information on how to create and manage
-# your spiders.
+from mse_scraper.spiders import today_spider, all_data_spider

@@ -7,7 +7,7 @@ from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
 from io import BytesIO
 from datetime import timedelta
-from utilities import my_engine
+from analysis.utilities import my_engine
 
 # Create the Blueprint
 lstm_blueprint = Blueprint('lstm_blueprint', __name__)
