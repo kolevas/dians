@@ -4,6 +4,7 @@ import mk.finki.ukim.mk.makedonskaberza.model.Issuer;
 import mk.finki.ukim.mk.makedonskaberza.repository.IssuerRepository;
 import mk.finki.ukim.mk.makedonskaberza.service.IssuerService;
 import mk.finki.ukim.mk.makedonskaberza.service.strategy.context.IssuerServiceContext;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,9 @@ public class IssuerServiceImpl implements IssuerService {
     private final IssuerRepository repository;
     private final RestTemplate restTemplate;
     private final IssuerServiceContext context;
+
+    @Value("${techanalysis.baseurl}")
+    private String baseURL;
 
     public IssuerServiceImpl(IssuerRepository repository, RestTemplate restTemplate, IssuerServiceContext context) {
         this.repository = repository;
@@ -58,7 +62,7 @@ public class IssuerServiceImpl implements IssuerService {
 
     @Override
     public InputStream pricePredictionImage(String issuerCode) {
-        String flaskUrl = "http://localhost:6000/predict";
+        String flaskUrl = baseURL + "/predict";
         String jsonBody = String.format("{\"issuer\": \"%s\"}", issuerCode);
 
         HttpHeaders headers = new HttpHeaders();

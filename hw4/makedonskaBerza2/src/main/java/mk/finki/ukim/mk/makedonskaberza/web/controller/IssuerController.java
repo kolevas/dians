@@ -52,15 +52,20 @@ public class IssuerController {
     public String pricePrediction(@PathVariable String code, Model model) throws IOException {
         Issuer issuer = issuerService.GetIssuerByCode(code);
 
+
         model.addAttribute("issuer", issuer);
+
         model.addAttribute("history", historyService.lastTransactionForIssuer(code));
+
 
         //za podatoci za poslednata godina (treba da se dodade samo vo html, kako kaj sporedba slicno)
 
             InputStream imageInput;
+
         try {
                 imageInput = issuerService.pricePredictionImage(code);
                 } catch (Exception e) {
+                e.printStackTrace();
                 model.addAttribute("error", "Не можевме да ја генерираме проекцијата за " + code + ". Обиди се повторно.");
 
                 return String.format("redirect:/company-details/{%s}",code);
@@ -68,13 +73,13 @@ public class IssuerController {
 
                 byte[] imageBytes = imageInput.readAllBytes();
                 String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+
                 model.addAttribute("base64Image", base64Image);
 
-        Issuer issuer1 = issuerService.GetIssuerByCode(code);
         model.addAttribute("c1",code.toUpperCase());
         model.addAttribute("c1Max", historyService.avgMaxPrice(code));
         model.addAttribute("c1Min", historyService.avgMinPrice(code));
-        model.addAttribute("c1HV", issuer1.getHvTotal());
+        model.addAttribute("c1HV", issuer.getHvTotal());
         model.addAttribute("c1Num", historyService.numTransactionsLastYear(code));
         return "company_details";
     }

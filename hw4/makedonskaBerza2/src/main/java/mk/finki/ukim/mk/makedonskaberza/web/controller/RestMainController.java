@@ -1,6 +1,7 @@
 package mk.finki.ukim.mk.makedonskaberza.web.controller;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,8 +14,11 @@ public class RestMainController {
 
     private final RestTemplate restTemplate;
 
-    private final String ANALYSIS_IMAGE_URL = "http://localhost:5000/generate";
-    private final String PREDICT_IMAGE_URL = "http://localhost:6000/predict";
+    @Value("${techanalysis.baseurl}")
+    private String baseURL;
+
+    private final String ANALYSIS_IMAGE_URL = baseURL + "/generate";
+    private final String PREDICT_IMAGE_URL = baseURL + "/predict";
 
 
 
