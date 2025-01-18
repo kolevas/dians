@@ -18,7 +18,7 @@ services:
 
   analysis:
     build:
-      context: ./"Python Scripts"/analysis
+      context: ./Python Scripts/analysis
       dockerfile: Dockerfile
     image: snezekoleva/mse_analysis:latest
     container_name: mse_analysis
